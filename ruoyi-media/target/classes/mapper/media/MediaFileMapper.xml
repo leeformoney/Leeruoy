@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.media.mapper.MediaFileMapper">
+    
+    <resultMap type="MediaFile" id="MediaFileResult">
+        <result property="fileId"        column="file_id"        />
+        <result property="fileName"      column="file_name"      />
+        <result property="originalName"  column="original_name"  />
+        <result property="filePath"      column="file_path"      />
+        <result property="fileUrl"       column="file_url"       />
+        <result property="fileSize"      column="file_size"      />
+        <result property="fileType"      column="file_type"      />
+        <result property="fileFormat"    column="file_format"    />
+        <result property="duration"      column="duration"       />
+        <result property="thumbnailUrl"  column="thumbnail_url"  />
+        <result property="categoryId"    column="category_id"    />
+        <result property="title"         column="title"          />
+        <result property="description"   column="description"    />
+        <result property="tags"          column="tags"           />
+        <result property="viewCount"     column="view_count"     />
+        <result property="likeCount"     column="like_count"     />
+        <result property="status"        column="status"         />
+        <result property="isPublic"      column="is_public"      />
+        <result property="sortOrder"     column="sort_order"     />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"        column="remark"         />
+        <result property="categoryName"  column="category_name"  />
+    </resultMap>
+
+    <sql id="selectMediaFileVo">
+        select f.file_id, f.file_name, f.original_name, f.file_path, f.file_url, f.file_size, 
+               f.file_type, f.file_format, f.duration, f.thumbnail_url, f.category_id, f.title, 
+               f.description, f.tags, f.view_count, f.like_count, f.status, f.is_public, 
+               f.sort_order, f.create_by, f.create_time, f.update_by, f.update_time, f.remark,
+               c.category_name
+        from media_file f
+        left join media_category c on f.category_id = c.category_id
+    </sql>
+
+    <select id="selectMediaFileList" parameterType="MediaFile" resultMap="MediaFileResult">
+        <include refid="selectMediaFileVo"/>
+        <where>  
+            <if test="fileName != null  and fileName != ''"> and f.file_name like concat('%', #{fileName}, '%')</if>
+            <if test="originalName != null  and originalName != ''"> and f.original_name like concat('%', #{originalName}, '%')</if>
+            <if test="fileType != null  and fileType != ''"> and f.file_type = #{fileType}</if>
+            <if test="fileFormat != null  and fileFormat != ''"> and f.file_format = #{fileFormat}</if>
+            <if test="categoryId != null "> and f.category_id = #{categoryId}</if>
+            <if test="title != null  and title != ''"> and f.title like concat('%', #{title}, '%')</if>
+            <if test="tags != null  and tags != ''"> and f.tags like concat('%', #{tags}, '%')</if>
+            <if test="status != null  and status != ''"> and f.status = #{status}</if>
+            <if test="isPublic != null  and isPublic != ''"> and f.is_public = #{isPublic}</if>
+        </where>
+        order by f.sort_order asc, f.create_time desc
+    </select>
+    
+    <select id="selectMediaFileByFileId" parameterType="Long" resultMap="MediaFileResult">
+        <include refid="selectMediaFileVo"/>
+        where f.file_id = #{fileId}
+    </select>
+
+    <select id="selectPublicMediaFileList" parameterType="MediaFile" resultMap="MediaFileResult">
+        <include refid="selectMediaFileVo"/>
+        <where>  
+            f.is_public = '1' and f.status = '0'
+            <if test="fileType != null  and fileType != ''"> and f.file_type = #{fileType}</if>
+            <if test="categoryId != null "> and f.category_id = #{categoryId}</if>
+            <if test="title != null  and title != ''"> and f.title like concat('%', #{title}, '%')</if>
+            <if test="tags != null  and tags != ''"> and f.tags like concat('%', #{tags}, '%')</if>
+        </where>
+        order by f.sort_order asc, f.view_count desc, f.create_time desc
+    </select>
+
+    <select id="selectMediaFilesByCategoryId" parameterType="Long" resultMap="MediaFileResult">
+        <include refid="selectMediaFileVo"/>
+        where f.category_id = #{categoryId} and f.is_public = '1' and f.status = '0'
+        order by f.sort_order asc, f.create_time desc
+    </select>
+        
+    <insert id="insertMediaFile" parameterType="MediaFile" useGeneratedKeys="true" keyProperty="fileId">
+        insert into media_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName != null and fileName != ''">file_name,</if>
+            <if test="originalName != null and originalName != ''">original_name,</if>
+            <if test="filePath != null and filePath != ''">file_path,</if>
+            <if test="fileUrl != null and fileUrl != ''">file_url,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="fileType != null and fileType != ''">file_type,</if>
+            <if test="fileFormat != null and fileFormat != ''">file_format,</if>
+            <if test="duration != null">duration,</if>
+            <if test="thumbnailUrl != null">thumbnail_url,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null">description,</if>
+            <if test="tags != null">tags,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="status != null">status,</if>
+            <if test="isPublic != null">is_public,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="originalName != null and originalName != ''">#{originalName},</if>
+            <if test="filePath != null and filePath != ''">#{filePath},</if>
+            <if test="fileUrl != null and fileUrl != ''">#{fileUrl},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="fileType != null and fileType != ''">#{fileType},</if>
+            <if test="fileFormat != null and fileFormat != ''">#{fileFormat},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="thumbnailUrl != null">#{thumbnailUrl},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="tags != null">#{tags},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isPublic != null">#{isPublic},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMediaFile" parameterType="MediaFile">
+        update media_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
+            <if test="originalName != null and originalName != ''">original_name = #{originalName},</if>
+            <if test="filePath != null and filePath != ''">file_path = #{filePath},</if>
+            <if test="fileUrl != null and fileUrl != ''">file_url = #{fileUrl},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="fileType != null and fileType != ''">file_type = #{fileType},</if>
+            <if test="fileFormat != null and fileFormat != ''">file_format = #{fileFormat},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="thumbnailUrl != null">thumbnail_url = #{thumbnailUrl},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isPublic != null">is_public = #{isPublic},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where file_id = #{fileId}
+    </update>
+
+    <delete id="deleteMediaFileByFileId" parameterType="Long">
+        delete from media_file where file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteMediaFileByFileIds" parameterType="String">
+        delete from media_file where file_id in 
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </delete>
+
+    <update id="incrementViewCount" parameterType="Long">
+        update media_file set view_count = view_count + 1 where file_id = #{fileId}
+    </update>
+
+    <update id="incrementLikeCount" parameterType="Long">
+        update media_file set like_count = like_count + 1 where file_id = #{fileId}
+    </update>
+
+</mapper>

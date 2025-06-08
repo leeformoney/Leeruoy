@@ -26,6 +26,20 @@ public class MimeTypeUtils
 
     public static final String[] VIDEO_EXTENSION = { "mp4", "avi", "rmvb" };
 
+    // 新增：音频文件扩展名
+    public static final String[] AUDIO_EXTENSION = { "mp3", "wav", "wma", "aac", "flac", "ogg", "m4a" };
+
+    // 新增：视频文件扩展名（扩展更多格式）
+    public static final String[] VIDEO_EXTENSION_FULL = { "mp4", "avi", "rmvb", "wmv", "mov", "flv", "mkv", "webm", "m4v" };
+
+    // 新增：媒体文件允许的扩展名（音频+视频）
+    public static final String[] MEDIA_ALLOWED_EXTENSION = {
+            // 音频格式
+            "mp3", "wav", "wma", "aac", "flac", "ogg", "m4a",
+            // 视频格式
+            "mp4", "avi", "rmvb", "wmv", "mov", "flv", "mkv", "webm", "m4v"
+    };
+
     public static final String[] DEFAULT_ALLOWED_EXTENSION = {
             // 图片
             "bmp", "gif", "jpg", "jpeg", "png",
@@ -33,8 +47,10 @@ public class MimeTypeUtils
             "doc", "docx", "xls", "xlsx", "ppt", "pptx", "html", "htm", "txt",
             // 压缩文件
             "rar", "zip", "gz", "bz2",
+            // 音频格式
+            "mp3", "wav", "wma", "aac", "flac", "ogg", "m4a",
             // 视频格式
-            "mp4", "avi", "rmvb",
+            "mp4", "avi", "rmvb", "wmv", "mov", "flv", "mkv", "webm", "m4v",
             // pdf
             "pdf" };
 
