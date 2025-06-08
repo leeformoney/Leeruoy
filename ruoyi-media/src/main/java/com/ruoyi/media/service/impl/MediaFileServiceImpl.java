@@ -15,6 +15,7 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.media.domain.MediaFile;
+import com.ruoyi.media.exception.MediaOperationException;
 import com.ruoyi.media.mapper.MediaFileMapper;
 import com.ruoyi.media.service.IMediaFileService;
 
@@ -39,7 +40,14 @@ public class MediaFileServiceImpl implements IMediaFileService
     @Override
     public MediaFile selectMediaFileByFileId(Long fileId)
     {
-        return mediaFileMapper.selectMediaFileByFileId(fileId);
+        if (fileId == null) {
+            throw new MediaOperationException("媒体文件ID不能为空");
+        }
+        MediaFile mediaFile = mediaFileMapper.selectMediaFileByFileId(fileId);
+        if (mediaFile == null) {
+            throw new MediaOperationException("未找到ID为" + fileId + "的媒体文件");
+        }
+        return mediaFile;
     }
 
     /**
@@ -63,8 +71,18 @@ public class MediaFileServiceImpl implements IMediaFileService
     @Override
     public int insertMediaFile(MediaFile mediaFile)
     {
-        mediaFile.setCreateTime(DateUtils.getNowDate());
-        return mediaFileMapper.insertMediaFile(mediaFile);
+        if (mediaFile == null) {
+            throw new MediaOperationException("媒体文件信息不能为空");
+        }
+        if (StringUtils.isEmpty(mediaFile.getTitle())) {
+            throw new MediaOperationException("媒体标题不能为空");
+        }
+        try {
+            mediaFile.setCreateTime(DateUtils.getNowDate());
+            return mediaFileMapper.insertMediaFile(mediaFile);
+        } catch (Exception e) {
+            throw new MediaOperationException("新增媒体文件失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -76,8 +94,30 @@ public class MediaFileServiceImpl implements IMediaFileService
     @Override
     public int updateMediaFile(MediaFile mediaFile)
     {
-        mediaFile.setUpdateTime(DateUtils.getNowDate());
-        return mediaFileMapper.updateMediaFile(mediaFile);
+        if (mediaFile == null) {
+            throw new MediaOperationException("媒体文件信息不能为空");
+        }
+        if (mediaFile.getFileId() == null) {
+            throw new MediaOperationException("媒体文件ID不能为空");
+        }
+        if (StringUtils.isEmpty(mediaFile.getTitle())) {
+            throw new MediaOperationException("媒体标题不能为空");
+        }
+        
+        try {
+            // 检查文件是否存在
+            MediaFile existFile = mediaFileMapper.selectMediaFileByFileId(mediaFile.getFileId());
+            if (existFile == null) {
+                throw new MediaOperationException("要修改的媒体文件不存在");
+            }
+            
+            mediaFile.setUpdateTime(DateUtils.getNowDate());
+            return mediaFileMapper.updateMediaFile(mediaFile);
+        } catch (MediaOperationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new MediaOperationException("修改媒体文件失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -89,7 +129,14 @@ public class MediaFileServiceImpl implements IMediaFileService
     @Override
     public int deleteMediaFileByFileIds(Long[] fileIds)
     {
-        return mediaFileMapper.deleteMediaFileByFileIds(fileIds);
+        if (fileIds == null || fileIds.length == 0) {
+            throw new MediaOperationException("请选择要删除的媒体文件");
+        }
+        try {
+            return mediaFileMapper.deleteMediaFileByFileIds(fileIds);
+        } catch (Exception e) {
+            throw new MediaOperationException("删除媒体文件失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -101,7 +148,14 @@ public class MediaFileServiceImpl implements IMediaFileService
     @Override
     public int deleteMediaFileByFileId(Long fileId)
     {
-        return mediaFileMapper.deleteMediaFileByFileId(fileId);
+        if (fileId == null) {
+            throw new MediaOperationException("媒体文件ID不能为空");
+        }
+        try {
+            return mediaFileMapper.deleteMediaFileByFileId(fileId);
+        } catch (Exception e) {
+            throw new MediaOperationException("删除媒体文件失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -119,6 +173,10 @@ public class MediaFileServiceImpl implements IMediaFileService
     {
         try
         {
+            if (file.isEmpty()) {
+                throw new MediaOperationException("上传的文件不能为空");
+            }
+            String originalFilename = file.getOriginalFilename();
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath() + "/media";
             // 上传并返回新文件名称
@@ -127,17 +185,17 @@ public class MediaFileServiceImpl implements IMediaFileService
             // 创建媒体文件对象
             MediaFile mediaFile = new MediaFile();
             mediaFile.setFileName(fileName);
-            mediaFile.setOriginalName(file.getOriginalFilename());
+            mediaFile.setOriginalName(originalFilename);
             mediaFile.setFilePath(filePath + "/" + fileName);
             mediaFile.setFileUrl("/profile/media/" + fileName);
             mediaFile.setFileSize(file.getSize());
-            mediaFile.setTitle(StringUtils.isNotEmpty(title) ? title : file.getOriginalFilename());
+            mediaFile.setTitle(StringUtils.isNotEmpty(title) ? title : originalFilename);
             mediaFile.setDescription(description);
             mediaFile.setCategoryId(categoryId);
             mediaFile.setTags(tags);
             
             // 判断文件类型
-            String extension = FilenameUtils.getExtension(file.getOriginalFilename()).toLowerCase();
+            String extension = FilenameUtils.getExtension(originalFilename).toLowerCase();
             if (isAudioFile(extension)) {
                 mediaFile.setFileType("audio");
             } else if (isVideoFile(extension)) {

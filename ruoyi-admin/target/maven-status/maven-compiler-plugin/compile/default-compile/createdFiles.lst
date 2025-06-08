@@ -19,9 +19,11 @@ com/ruoyi/web/controller/tool/TestController.class
 com/ruoyi/web/controller/common/CaptchaController.class
 com/ruoyi/RuoYiServletInitializer.class
 com/ruoyi/web/core/config/SwaggerConfig.class
+com/ruoyi/web/controller/media/MediaCategoryController.class
 com/ruoyi/web/controller/system/SysRoleController.class
 com/ruoyi/web/controller/system/SysUserController.class
 com/ruoyi/web/controller/system/SysMenuController.class
+com/ruoyi/web/controller/media/MediaAppApiController.class
 com/ruoyi/web/controller/system/SysIndexController.class
 com/ruoyi/RuoYiApplication.class
 com/ruoyi/web/controller/system/SysNoticeController.class

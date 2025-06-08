@@ -1,5 +1,9 @@
+com/ruoyi/media/mapper/MediaCategoryMapper.class
 com/ruoyi/media/service/impl/MediaFileServiceImpl.class
+com/ruoyi/media/exception/MediaOperationException.class
 com/ruoyi/media/service/IMediaFileService.class
+com/ruoyi/media/service/impl/MediaCategoryServiceImpl.class
+com/ruoyi/media/service/IMediaCategoryService.class
 com/ruoyi/media/domain/MediaFile.class
 com/ruoyi/media/mapper/MediaFileMapper.class
 com/ruoyi/media/domain/MediaCategory.class

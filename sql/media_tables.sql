@@ -10,6 +10,7 @@ CREATE TABLE `media_category` (
   `category_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '分类ID',
   `category_name` varchar(50) NOT NULL COMMENT '分类名称',
   `parent_id` bigint(20) DEFAULT 0 COMMENT '父分类ID',
+  `ancestors` varchar(255) DEFAULT '' COMMENT '祖级列表',
   `order_num` int(4) DEFAULT 0 COMMENT '显示顺序',
   `status` char(1) DEFAULT '0' COMMENT '状态（0正常 1停用）',
   `create_by` varchar(64) DEFAULT '' COMMENT '创建者',

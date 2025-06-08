@@ -1,5 +1,9 @@
 /Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/service/IMediaFileService.java
 /Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/service/impl/MediaFileServiceImpl.java
 /Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/domain/MediaCategory.java
+/Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/service/IMediaCategoryService.java
+/Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/exception/MediaOperationException.java
 /Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/domain/MediaFile.java
 /Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/mapper/MediaFileMapper.java
+/Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/mapper/MediaCategoryMapper.java
+/Users/haolee/code/Leeruoy/ruoyi-media/src/main/java/com/ruoyi/media/service/impl/MediaCategoryServiceImpl.java

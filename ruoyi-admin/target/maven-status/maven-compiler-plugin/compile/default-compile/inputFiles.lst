@@ -2,7 +2,9 @@
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java
+/Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/media/MediaStatisticsController.java
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java
+/Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/media/MediaAppApiController.java
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java
 /Users/haolee/code/Leeruoy/ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java

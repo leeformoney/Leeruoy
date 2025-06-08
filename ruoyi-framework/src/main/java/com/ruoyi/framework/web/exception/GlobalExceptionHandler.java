@@ -18,6 +18,8 @@ import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.html.EscapeUtil;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.SecurityUtils;
 
 /**
  * 全局异常处理器
@@ -59,8 +61,7 @@ public class GlobalExceptionHandler
     public AjaxResult handleServiceException(ServiceException e, HttpServletRequest request)
     {
         log.error(e.getMessage(), e);
-        Integer code = e.getCode();
-        return StringUtils.isNotNull(code) ? AjaxResult.error(code, e.getMessage()) : AjaxResult.error(e.getMessage());
+        return AjaxResult.error(e.getMessage());
     }
 
     /**

@@ -233,6 +233,9 @@ export default {
       rules: {
         title: [
           { required: true, message: "媒体标题不能为空", trigger: "blur" }
+        ],
+        fileUrl: [
+          { required: true, message: "媒体文件不能为空", trigger: "blur" }
         ]
       }
     };
@@ -248,7 +251,8 @@ export default {
         this.fileList = response.rows;
         this.total = response.total;
         this.loading = false;
-      }).catch(() => {
+      }).catch(error => {
+        this.$modal.msgError("获取媒体列表失败：" + (error.message || "未知错误"));
         this.loading = false;
       });
     },
@@ -297,11 +301,15 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const fileId = row.fileId || this.ids[0];
+      const fileId = row.fileId || this.ids
       getFile(fileId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改媒体文件";
+        // 修改时，文件已存在，无需强制再上传，所以移除校验
+        this.$nextTick(() => {
+          this.$refs.form.clearValidate('fileUrl');
+        });
       });
     },
     /** 提交按钮 */
@@ -327,11 +335,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const fileIds = row.fileId || this.ids;
-      this.$modal.confirm('是否确认删除媒体文件编号为"' + fileIds + '"的数据项？').then(() => {
-        delFile(fileIds).then(response => {
-          this.$modal.msgSuccess("删除成功");
-          this.getList();
-        });
+      this.$modal.confirm('是否确认删除媒体文件编号为"' + fileIds + '"的数据项？').then(function() {
+        return delFile(fileIds);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },
     /** 播放按钮操作 */
@@ -340,9 +348,17 @@ export default {
       this.playOpen = true;
     },
     /** 文件上传成功处理 */
-    handleFileSuccess(response, file) {
-      this.form.fileUrl = response.url;
-      this.$modal.msgSuccess("上传成功");
+    handleFileSuccess(response, file, fileList) {
+      if (response.code === 200) {
+        this.form.fileName = response.fileName;
+        this.form.fileUrl = response.url;
+        this.$modal.msgSuccess("上传成功");
+        // 上传成功后，手动触发一次校验
+        this.$refs.form.validateField('fileUrl');
+      } else {
+        this.$modal.msgError(response.msg);
+      }
+      this.upload.fileList = fileList;
     },
     /** 上传前校验格式 */
     handleBeforeUpload(file) {
